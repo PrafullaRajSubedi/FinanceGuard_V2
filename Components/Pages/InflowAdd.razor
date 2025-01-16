@@ -5,28 +5,28 @@
 @inject NavigationManager NavigationManager
 
 <style>
-    /* Main container for the entire page */
+    
     .container {
         display: flex;
-        height: 100vh; /* Full viewport height */
-        width: 100%; /* Full width of the viewport */
+        height: 100vh; 
+        width: 100%; 
         margin: 0;
         padding: 0;
     }
 
     /* Navigation menu styles */
     .menu {
-        background-color: #2c3e50; /* Dark blue background */
+        background-color: #2c3e50; 
         color: white;
-        width: 250px; /* Fixed width */
-        height: 100%; /* Full height of the page */
+        width: 250px; 
+        height: 100%; 
         display: flex;
         flex-direction: column;
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        position: fixed; /* Keeps the menu fixed to the left */
-        left: 0; /* Aligns it to the far left */
-        top: 0; /* Starts at the top */
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        position: fixed; 
+        left: 0; 
+        top: 0; 
     }
 
         /* Navigation links inside the menu */
@@ -61,6 +61,19 @@
         padding: 20px;
         height: 100vh;
         overflow-y: auto; /* Enables scrolling if content exceeds viewport */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Form container box */
+    .form-box {
+        background-color: white; /* White background for contrast */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        width: 100%;
+        max-width: 600px;
     }
 
     /* Form row styles */
@@ -77,31 +90,30 @@
 
         /* Input, select, and textarea styles */
         .form-row input, .form-row select, .form-row textarea {
-            width: 100%; 
+            width: 100%;
             padding: 10px;
             font-size: 1rem;
-            border: 1px solid #b4c7b4; 
+            border: 1px solid #b4c7b4;
             border-radius: 4px;
         }
 
-    
+    /* Submit button styles */
     .add-button {
         margin-top: 20px;
         padding: 10px 20px;
-        background-color: #2ecc71; /* Green background */
+        background-color: #2ecc71; 
         color: white;
         border: none;
         border-radius: 4px;
         font-size: 1rem;
         cursor: pointer;
+        width: 100%;
     }
 
-        
         .add-button:hover {
             background-color: #27ae60;
         }
 
-    
     .error-message {
         color: red;
         font-size: 0.9rem;
@@ -110,7 +122,6 @@
 </style>
 
 <div class="container">
-    
     <div class="menu">
         <a href="/dashboard">Dashboard</a>
         <a href="/inflow" class="active">Cash Inflow</a>
@@ -119,50 +130,50 @@
     </div>
 
     <div class="content">
-        <h1 id="add-inflow-header">Add Cash Inflow</h1>
+        <div class="form-box">
+            <h1 id="add-inflow-header">Add Cash Inflow</h1>
 
-        <!-- Display error message if any issue occurs during submission -->
-        @if (!string.IsNullOrEmpty(ErrorMessage))
-        {
-            <div class="error-message">@ErrorMessage</div>
-        }
+            <!-- Display error message if any issue occurs during submission -->
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="error-message">@ErrorMessage</div>
+            }
 
-        <!-- Inflow form -->
-        <form id="add-inflow-form" @onsubmit="HandleFormSubmit">
-            <div class="form-row">
-                <!-- Date input for the transaction -->
-                <label for="inflow-date">Date</label>
-                <input id="inflow-date" type="date" @bind="Transaction.Date" required />
-            </div>
-            <div class="form-row">
-                <!-- Input for the transaction amount -->
-                <label for="inflow-amount">Amount</label>
-                <input id="inflow-amount" type="number" @bind="Transaction.Amount" required />
-            </div>
-            <div class="form-row">
-                <!-- Dropdown for default tags  -->
-                <label for="default-tags">Default Tags</label>
-                <select id="default-tags" @onchange="SetDefaultTag">
-                    <option value="">Select a tag</option>
-                    <option value="Salary">Salary</option>
-                    <option value="Investment">Investment</option>
-                    <option value="Investment">Loan</option>
-                    
-                </select>
-            </div>
-            <div class="form-row">
-                <!-- Custom tags input for additional tag -->
-                <label for="custom-tags">Custom Tags</label>
-                <input id="custom-tags" type="text" @bind="CustomTags" placeholder="Enter custom tags (optional)" />
-            </div>
-            <div class="form-row">
-                <!-- Notes section for adding extra details about the transaction -->
-                <label for="inflow-notes">Notes</label>
-                <textarea id="inflow-notes" rows="3" @bind="Transaction.Notes" placeholder="Add any notes (optional)"></textarea>
-            </div>
-            <!-- Submit button to save the transaction -->
-            <button id="submit-inflow-button" type="submit" class="add-button">Add Inflow</button>
-        </form>
+            <!-- Inflow form -->
+            <form id="add-inflow-form" @onsubmit="HandleFormSubmit">
+                <div class="form-row">
+                    <!-- Date input for the transaction -->
+                    <label for="inflow-date">Date</label>
+                    <input id="inflow-date" type="date" @bind="Transaction.Date" required />
+                </div>
+                <div class="form-row">
+                    <!-- Input for the transaction amount -->
+                    <label for="inflow-amount">Amount</label>
+                    <input id="inflow-amount" type="number" @bind="Transaction.Amount" required />
+                </div>
+                <div class="form-row">
+                    <!-- Dropdown for default tags  -->
+                    <label for="default-tags">Default Tags</label>
+                    <select id="default-tags" @onchange="SetDefaultTag">
+                        <option value="">Select a tag</option>
+                        <option value="Salary">Salary</option>
+                        <option value="Investment">Investment</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <!-- Custom tags input for additional tag -->
+                    <label for="custom-tags">Custom Tags</label>
+                    <input id="custom-tags" type="text" @bind="CustomTags" placeholder="Enter custom tags (optional)" />
+                </div>
+                <div class="form-row">
+                    <!-- Notes section for adding extra details about the transaction -->
+                    <label for="inflow-notes">Notes</label>
+                    <textarea id="inflow-notes" rows="3" @bind="Transaction.Notes" placeholder="Add any notes (optional)"></textarea>
+                </div>
+                <!-- Submit button to save the transaction -->
+                <button id="submit-inflow-button" type="submit" class="add-button">Add Inflow</button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -207,7 +218,7 @@
 
         try
         {
-            // Save the transaction 
+            // Save the transaction
             await TransactionService.AddTransactionAsync(Transaction);
             // Redirect to the inflow list page after successful submission
             NavigationManager.NavigateTo("/inflow");

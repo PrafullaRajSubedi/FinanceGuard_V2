@@ -8,7 +8,7 @@
     "Notes": "Www"
   },
   {
-    "ID": 0,
+    "ID": 1,
     "Type": "Inflow",
     "Amount": 20000,
     "Date": "2025-01-17T00:00:00",
@@ -16,11 +16,51 @@
     "Notes": "from investment in nbb"
   },
   {
-    "ID": 1,
+    "ID": 2,
     "Type": "Inflow",
     "Amount": 2000,
     "Date": "2025-01-02T00:00:00",
     "Tags": "Salary, ABC",
     "Notes": "aaaassssssfffffffddd"
+  },
+  {
+    "ID": 3,
+    "Type": "Outflow",
+    "Amount": 10000,
+    "Date": "2025-01-18T00:00:00",
+    "Tags": "Fruits",
+    "Notes": "Good Fruits"
+  },
+  {
+    "ID": 4,
+    "Type": "Outflow",
+    "Amount": 2000,
+    "Date": "2024-12-21T00:00:00",
+    "Tags": "Bills, Light ",
+    "Notes": "Paying light bills"
+  },
+  {
+    "ID": 5,
+    "Type": "Outflow",
+    "Amount": 5000,
+    "Date": "2025-01-01T00:00:00",
+    "Tags": "Entertainment, Movie",
+    "Notes": "Watched the new spiderman movie "
+  },
+  {
+    "ID": 6,
+    "Type": "Outflow",
+    "Amount": 20000,
+    "Date": "2025-01-17T03:05:34.4591228+05:45",
+    "Tags": "Entertainment, TV",
+    "Notes": "Bought a new TV"
+  },
+  {
+    "ID": 7,
+    "Type": "Outflow",
+    "Amount": 80000,
+    "Date": "2025-01-17T03:06:15.9323748+05:45",
+    "Tags": "Entertainment, aa",
+    "Notes": "aaa"
   }
 ]
