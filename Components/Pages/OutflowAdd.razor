@@ -1,0 +1,147 @@
+﻿@page "/outflowadd"
+
+<style>
+    .container {
+        display: flex;
+        height: 100vh;
+    }
+
+    .menu {
+        background-color: #2c3e50;
+        color: white;
+        width: 250px;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+        .menu div {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+            .menu a:hover {
+                background-color: #34495e;
+            }
+
+    .content {
+        flex: 1;
+        background-color: #e8f5e9;
+        padding: 20px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .header h1 {
+            font-size: 2rem;
+        }
+
+    .total-balance {
+        background-color: #2ecc71;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    form {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-row {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .form-row label {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #b4c7b4;
+            border-radius: 4px;
+        }
+
+    .add-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #2ecc71;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        align-self: flex-start;
+    }
+
+        .add-button:hover {
+            background-color: #27ae60;
+        }
+</style>
+
+<div class="container">
+    <!-- Menu -->
+    <div class="menu">
+        <div>Menu</div>
+        <a href="/inflow">Cash Inflow</a>
+        <a href="/outflow">Cash Outflow</a>
+        <a href="/debt">Debt</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="header">
+            <h1>Add Cash Outflow</h1>
+            <div class="total-balance">Total Balance: $0</div>
+        </div>
+        <form>
+            <div class="form-row">
+                <label>Date</label>
+                <input type="date" />
+            </div>
+            <div class="form-row">
+                <label>Amount</label>
+                <input type="number" />
+            </div>
+            <div class="form-row">
+                <label>Transaction Type</label>
+                <select>
+                    <option>Expense</option>
+                    <option>Debt Payment</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>Tags</label>
+                <input type="text" />
+            </div>
+            <div class="form-row">
+                <label>Notes</label>
+                <textarea rows="3"></textarea>
+            </div>
+            <button class="add-button">Add</button>
+        </form>
+    </div>
+</div>
+

@@ -1,0 +1,166 @@
+﻿@page "/register"
+@using FinanceGuard.Models
+@using FinanceGuard.Services
+@inject IUserService userService
+@inject NavigationManager Navigation
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #e8f5e9;
+    }
+
+    .register-box {
+        background-color: #34495e;
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .register-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2ecc71;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .register-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #2ecc71;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        color: white;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+        .register-button:hover {
+            background-color: #27ae60;
+        }
+
+    .register-box p {
+        margin-top: 15px;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .register-box a {
+        color: #2ecc71;
+        text-decoration: none;
+    }
+
+        .register-box a:hover {
+            text-decoration: underline;
+        }
+
+    .error-message {
+        color: red;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-box">
+        <h2>Create an Account</h2>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="error-message">@errorMessage</div>
+        }
+
+        <form @onsubmit="RegisterUser">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" @bind="newUser.Username" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" @bind="newUser.Password" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="currency">Currency</label>
+                <select id="currency" @bind="newUser.PreferredCurrency" class="form-control">
+                    <option value="$">$</option>
+                    <option value="€">€</option>
+                    <option value="£">£</option>
+                    <option value="₹">Rs</option>
+                </select>
+            </div>
+
+            <button type="submit" class="register-button">Register</button>
+        </form>
+
+        <p>
+            Already have an account? <a href="/">Login</a>
+        </p>
+    </div>
+</div>
+
+@code {
+    private User newUser = new User
+        {
+            Username = string.Empty,
+            Password = string.Empty,
+            PreferredCurrency = "$"
+        };
+
+    private string? errorMessage;
+
+    private async Task RegisterUser()
+    {
+        // Ensure both username and password are entered
+        if (string.IsNullOrWhiteSpace(newUser.Username) || string.IsNullOrWhiteSpace(newUser.Password))
+        {
+            errorMessage = "Username and Password are required.";
+            return;
+        }
+
+        // Attempt to save the user
+        bool isUserSaved = await userService.SaveUserAsync(newUser);
+        if (isUserSaved)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "User registration failed. Please try again.";
+        }
+    }
+
+    
+}
