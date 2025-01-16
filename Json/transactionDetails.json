@@ -5,7 +5,8 @@
     "Amount": 10000,
     "Date": "2025-01-17T01:29:35.2479443+05:45",
     "Tags": "Salary, Jan",
-    "Notes": "Www"
+    "Notes": "Www",
+    "Status": "Cleared"
   },
   {
     "ID": 1,
@@ -13,7 +14,8 @@
     "Amount": 20000,
     "Date": "2025-01-17T00:00:00",
     "Tags": "Investment, NBB",
-    "Notes": "from investment in nbb"
+    "Notes": "from investment in nbb",
+    "Status": "Cleared"
   },
   {
     "ID": 2,
@@ -21,7 +23,8 @@
     "Amount": 2000,
     "Date": "2025-01-02T00:00:00",
     "Tags": "Salary, ABC",
-    "Notes": "aaaassssssfffffffddd"
+    "Notes": "aaaassssssfffffffddd",
+    "Status": "Cleared"
   },
   {
     "ID": 3,
@@ -29,7 +32,8 @@
     "Amount": 10000,
     "Date": "2025-01-18T00:00:00",
     "Tags": "Fruits",
-    "Notes": "Good Fruits"
+    "Notes": "Good Fruits",
+    "Status": "Cleared"
   },
   {
     "ID": 4,
@@ -37,7 +41,8 @@
     "Amount": 2000,
     "Date": "2024-12-21T00:00:00",
     "Tags": "Bills, Light ",
-    "Notes": "Paying light bills"
+    "Notes": "Paying light bills",
+    "Status": "Cleared"
   },
   {
     "ID": 5,
@@ -45,7 +50,8 @@
     "Amount": 5000,
     "Date": "2025-01-01T00:00:00",
     "Tags": "Entertainment, Movie",
-    "Notes": "Watched the new spiderman movie "
+    "Notes": "Watched the new spiderman movie ",
+    "Status": "Cleared"
   },
   {
     "ID": 6,
@@ -53,7 +59,8 @@
     "Amount": 20000,
     "Date": "2025-01-17T03:05:34.4591228+05:45",
     "Tags": "Entertainment, TV",
-    "Notes": "Bought a new TV"
+    "Notes": "Bought a new TV",
+    "Status": "Cleared"
   },
   {
     "ID": 7,
@@ -61,6 +68,52 @@
     "Amount": 80000,
     "Date": "2025-01-17T03:06:15.9323748+05:45",
     "Tags": "Entertainment, aa",
-    "Notes": "aaa"
+    "Notes": "aaa",
+    "Status": "Cleared"
+  },
+  {
+    "ID": 8,
+    "Type": "Debt",
+    "Amount": 5000,
+    "Date": "2025-01-17T03:57:47.360817+05:45",
+    "Tags": "Burrowed",
+    "Notes": "fff",
+    "Status": "Cleared"
+  },
+  {
+    "ID": 9,
+    "Type": "Debt",
+    "Amount": 100,
+    "Date": "2025-01-17T04:15:40.129597+05:45",
+    "Tags": "adsasd",
+    "Notes": "asdasdasd",
+    "Status": "Cleared"
+  },
+  {
+    "ID": 10,
+    "Type": "Debt",
+    "Amount": 200,
+    "Date": "2025-01-17T04:16:53.1827495+05:45",
+    "Tags": "Loan, Friensd",
+    "Notes": "Borrowed  from friend",
+    "Status": "Cleared"
+  },
+  {
+    "ID": 11,
+    "Type": "Debt",
+    "Amount": 50000,
+    "Date": "2025-01-17T04:27:19.1282397+05:45",
+    "Tags": "Credit Card, adaad",
+    "Notes": "asdads",
+    "Status": "Cleared"
+  },
+  {
+    "ID": 12,
+    "Type": "Inflow",
+    "Amount": 80000,
+    "Date": "2025-01-17T04:27:57.3558722+05:45",
+    "Tags": "Salary, Jan",
+    "Notes": "dfamlkskdf\n",
+    "Status": "Pending"
   }
 ]

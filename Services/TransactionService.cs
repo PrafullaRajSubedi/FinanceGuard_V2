@@ -80,5 +80,24 @@ namespace FinanceGuard.Services
             var debts = await GetTotalByTypeAsync("Debt");
             return inflows + debts - outflows;
         }
+
+        // Update debt status (Cleared or Pending)
+        public async Task<bool> UpdateDebtStatusAsync(int transactionId, string newStatus)
+        {
+            var transactions = await GetAllTransactionsAsync();
+            var transaction = transactions.FirstOrDefault(t => t.ID == transactionId && t.Type == "Debt");
+
+            if (transaction != null)
+            {
+                // Update the debt's status
+                transaction.Status = newStatus;
+
+                // Save updated transactions back to the file
+                await SaveTransactionsAsync(transactions);
+                return true;
+            }
+
+            return false; // Return false if the transaction was not found
+        }
     }
 }

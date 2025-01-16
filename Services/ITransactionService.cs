@@ -12,6 +12,8 @@ namespace FinanceGuard.Services
         Task<decimal> GetTotalByTypeAsync(string type);
         Task<decimal> CalculateTotalDebtAsync(); 
         Task<decimal> CalculatePendingDebtAsync(); 
-        Task<decimal> CalculateTotalBalanceAsync(); 
+        Task<decimal> CalculateTotalBalanceAsync();
+        Task<bool> UpdateDebtStatusAsync(int transactionId, string newStatus);
+
     }
 }

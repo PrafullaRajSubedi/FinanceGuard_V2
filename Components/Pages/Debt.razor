@@ -1,6 +1,8 @@
 ﻿@page "/debt"
+@using FinanceGuard.Models
+@using FinanceGuard.Services
+@inject ITransactionService TransactionService
 @inject NavigationManager NavigationManager
-
 
 <style>
     .container {
@@ -17,11 +19,6 @@
         padding: 20px;
     }
 
-        .menu div {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-
         .menu a {
             color: white;
             text-decoration: none;
@@ -29,11 +26,17 @@
             margin: 10px 0;
             padding: 10px;
             border-radius: 4px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
             .menu a:hover {
                 background-color: #34495e;
+                color: #ecf0f1;
+            }
+
+            .menu a.active {
+                background-color: #f39c12;
+                font-weight: bold;
             }
 
     .content {
@@ -46,48 +49,42 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-    }
-
-        .header h1 {
-            font-size: 2rem;
-        }
-
-    .total-balance {
-        background-color: #2ecc71;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 4px;
-        font-size: 1rem;
-    }
-
-    .table-section {
-        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        background-color: #d5e8d4;
-        border-radius: 8px;
-        overflow: hidden;
     }
 
-        table th,
-        table td {
+        table th, table td {
             text-align: left;
             padding: 10px;
             border: 1px solid #b4c7b4;
         }
 
         table th {
-            background-color: #2ecc71;
+            background-color: #f39c12;
             color: white;
+        }
+
+    .action-button {
+        padding: 5px 10px;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .action-button:hover {
+            background-color: #2ecc71;
         }
 
     .add-button {
         margin-top: 20px;
         padding: 10px 20px;
-        background-color: #2ecc71;
+        background-color: #f39c12;
         color: white;
         border: none;
         border-radius: 4px;
@@ -96,59 +93,127 @@
     }
 
         .add-button:hover {
-            background-color: #27ae60;
+            background-color: #d87c00;
         }
 
-    .menu a:hover {
-        background-color: #34495e;
-    }
-
-    /* Highlight for the currently active page */
-    .menu a.active {
-        background-color: #27ae60;
-        font-weight: bold;
+    .error-message {
+        color: red;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
     }
 </style>
 
 <div class="container">
-    <!-- Menu -->
+    <!-- Navigation Menu -->
     <div class="menu">
-        <div>Menu</div>
         <a href="/dashboard">Dashboard</a>
         <a href="/inflow">Cash Inflow</a>
         <a href="/outflow">Cash Outflow</a>
         <a href="/debt" class="active">Debt</a>
     </div>
 
-    
     <div class="content">
         <div class="header">
-            <h1>Debt</h1>
-            <div class="total-balance">Total Balance: $0</div>
+            <h1>Debt Management</h1>
+            <div>Total Debt: $@TotalDebt</div>
         </div>
-        <div class="table-section">
-            <table>
-                <thead>
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="error-message">@ErrorMessage</div>
+        }
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Tags</th>
+                    <th>Notes</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Debts != null && Debts.Any())
+                {
+                    foreach (var debt in Debts)
+                    {
+                        <tr>
+                            <td>@debt.ID</td>
+                            <td>@debt.Date.ToShortDateString()</td>
+                            <td>$@debt.Amount</td>
+                            <td>@debt.Status</td>
+                            <td>@debt.Tags</td>
+                            <td>@debt.Notes</td>
+                            <td>
+                                @if (debt.Status == "Pending")
+                                {
+                                    <button class="action-button" @onclick="(() => ClearDebt(debt.ID, debt.Amount))">Clear</button>
+                                }
+                                else
+                                {
+                                    <span>Cleared</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
                     <tr>
-                        <th>ID</th>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Tags</th>
-                        <th>Amount</th>
-                        <th>Notes</th>
+                        <td colspan="7">No debts found.</td>
                     </tr>
-                </thead>
-                <tbody>
-                    
-                </tbody>
-            </table>
-            <button class="add-button" @onclick="NavigateToAdd">Add</button>
-        </div>
+                }
+            </tbody>
+        </table>
+
+        <button class="add-button" @onclick="NavigateToAddDebt">Add Debt</button>
     </div>
 </div>
 
 @code {
-    private void NavigateToAdd()
+    private List<Transaction> Debts { get; set; } = new List<Transaction>();
+    private decimal TotalDebt { get; set; }
+    private decimal TotalBalance { get; set; }
+    private string ErrorMessage { get; set; } = string.Empty;
+
+    // Load debts and calculate total balance and total debt
+    protected override async Task OnInitializedAsync()
+    {
+        Debts = await TransactionService.GetTransactionsByTypeAsync("Debt");
+        TotalDebt = await TransactionService.CalculateTotalDebtAsync();
+        TotalBalance = await TransactionService.CalculateTotalBalanceAsync();
+    }
+
+    // Clear a debt if sufficient balance is available
+    private async Task ClearDebt(int id, decimal amount)
+    {
+        ErrorMessage = string.Empty;
+
+        if (TotalBalance < amount)
+        {
+            ErrorMessage = "Insufficient balance to clear this debt.";
+            return;
+        }
+
+        var success = await TransactionService.UpdateDebtStatusAsync(id, "Cleared");
+
+        if (success)
+        {
+            Debts = await TransactionService.GetTransactionsByTypeAsync("Debt");
+            TotalDebt = await TransactionService.CalculateTotalDebtAsync();
+            TotalBalance = await TransactionService.CalculateTotalBalanceAsync();
+        }
+        else
+        {
+            ErrorMessage = "Failed to clear debt.";
+        }
+    }
+
+    // Navigate to Add Debt Page
+    private void NavigateToAddDebt()
     {
         NavigationManager.NavigateTo("/debtadd");
     }
