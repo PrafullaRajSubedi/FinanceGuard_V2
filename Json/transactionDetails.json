@@ -115,5 +115,68 @@
     "Tags": "Salary, Jan",
     "Notes": "dfamlkskdf\n",
     "Status": "Pending"
+  },
+  {
+    "ID": 13,
+    "Type": "Debt",
+    "Amount": 600,
+    "Date": "2025-01-17T05:11:07.8182007+05:45",
+    "Tags": "Credit Card, card",
+    "Notes": "caard ss",
+    "Status": "Pending"
+  },
+  {
+    "ID": 14,
+    "Type": "Debt",
+    "Amount": 9000,
+    "Date": "2025-01-07T00:00:00",
+    "Tags": "Loan, Cars",
+    "Notes": "cadsr cars",
+    "Status": "Pending"
+  },
+  {
+    "ID": 15,
+    "Type": "Debt",
+    "Amount": 100,
+    "Date": "2025-01-12T00:00:00",
+    "Tags": "Credit Card, food",
+    "Notes": "good food",
+    "Status": "Pending"
+  },
+  {
+    "ID": 16,
+    "Type": "Debt",
+    "Amount": 993,
+    "Date": "2024-12-31T00:00:00",
+    "Tags": "Credit Card, books",
+    "Notes": "bought books",
+    "Status": "Pending"
+  },
+  {
+    "ID": 17,
+    "Type": "Debt",
+    "Amount": 345,
+    "Date": "2024-04-20T00:00:00",
+    "Tags": "Credit Card, sd",
+    "Notes": "sfsdsdf",
+    "Status": "Pending"
+  },
+  {
+    "ID": 18,
+    "Type": "Debt",
+    "Amount": 12122,
+    "Date": "2025-01-01T00:00:00",
+    "Tags": "Loan, ewrowe",
+    "Notes": "vkcvkxc",
+    "Status": "Pending"
+  },
+  {
+    "ID": 19,
+    "Type": "Inflow",
+    "Amount": 50000,
+    "Date": "2025-01-17T05:20:47.0893571+05:45",
+    "Tags": "Investment, Monthly ",
+    "Notes": "Got it monthly",
+    "Status": "Pending"
   }
 ]
