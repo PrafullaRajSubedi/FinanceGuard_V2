@@ -8,11 +8,11 @@ namespace FinanceGuard.Models
 {
     public class Transaction
     {
-        public int Id { get; set; } //Storing id 
-        public string? Type { get; set; }  //Stroing Tyep of transaction (Inflo, Outflw, Debt)
-        public decimal Amount { get; set; } //Stroing amount 
-        public DateTime Date { get; set; }  //Stroing date
-        public string? Notes { get; set; }  //adding note
-        public string? Tags { get; set; } //stpring tags
+        public int ID { get; set; } // Storing id
+        public string Type { get; set; }  //Storing Type of transaction
+        public decimal Amount { get; set; } //Storing Amount
+        public DateTime Date { get; set; } //Storing Date
+        public string Tags { get; set; } // "Salary, Bonus"
+        public string Notes { get; set; }// Optional notes
     }
 }

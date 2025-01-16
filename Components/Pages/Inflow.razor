@@ -1,6 +1,8 @@
 ﻿@page "/inflow"
+@using FinanceGuard.Models
+@using FinanceGuard.Services
+@inject ITransactionService TransactionService
 @inject NavigationManager NavigationManager
-
 
 <style>
     .container {
@@ -16,11 +18,6 @@
         flex-direction: column;
         padding: 20px;
     }
-
-        .menu div {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
 
         .menu a {
             color: white;
@@ -46,18 +43,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-    }
-
-        .header h1 {
-            font-size: 2rem;
-        }
-
-    .total-balance {
-        background-color: #2ecc71;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 4px;
-        font-size: 1rem;
+        margin-bottom: 20px;
     }
 
     .table-section {
@@ -67,13 +53,9 @@
     table {
         width: 100%;
         border-collapse: collapse;
-        background-color: #d5e8d4;
-        border-radius: 8px;
-        overflow: hidden;
     }
 
-        table th,
-        table td {
+        table th, table td {
             text-align: left;
             padding: 10px;
             border: 1px solid #b4c7b4;
@@ -82,6 +64,18 @@
         table th {
             background-color: #2ecc71;
             color: white;
+        }
+
+    .filter-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+        .filter-container input, .filter-container select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #b4c7b4;
         }
 
     .add-button {
@@ -98,45 +92,137 @@
         .add-button:hover {
             background-color: #27ae60;
         }
+
+    .menu a:hover {
+        background-color: #34495e;
+    }
+
+    /* Highlight for the currently active page */
+    .menu a.active {
+        background-color: #27ae60;
+        font-weight: bold;
+    }
 </style>
 
 <div class="container">
-    <!-- Menu -->
+    <!-- Menu Section -->
     <div class="menu">
-        <div>Menu</div>
         <a href="/dashboard">Dashboard</a>
         <a href="/inflow" class="active">Cash Inflow</a>
         <a href="/outflow">Cash Outflow</a>
         <a href="/debt">Debt</a>
     </div>
 
-    <!-- Content -->
+    <!-- Content Section -->
     <div class="content">
-        <div class="header">
+        <!-- Header Section with Title and Total Inflows -->
+        <div class="header" id="inflow-header">
             <h1>Cash Inflow</h1>
-            <div class="total-balance">Total Balance: $0</div>
+            <div id="total-inflow-summary">Total Inflows: $@TotalInflows</div>
         </div>
+
+        <!-- Filter Section for Date and Tags -->
+        <div class="filter-container" id="inflow-filters">
+            <input id="filter-start-date" type="date" @bind="StartDate" placeholder="Start Date" />
+            <input id="filter-end-date" type="date" @bind="EndDate" placeholder="End Date" />
+            <select id="filter-tags" @onchange="FilterByTag">
+                <option value="">All Tags</option>
+                <option value="Salary">Salary</option>
+                <option value="Investment">Investment</option>
+            </select>
+        </div>
+
+        <!-- Table Section for Displaying Inflows -->
         <div class="table-section">
-            <table>
+            <table id="inflow-table">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Date</th>
-                        <th>Type</th>
-                        <th>Tags</th>
                         <th>Amount</th>
+                        <th>Tags</th>
                         <th>Notes</th>
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    @if (FilteredTransactions != null && FilteredTransactions.Any())
+                    {
+                        foreach (var transaction in FilteredTransactions)
+                        {
+                            <tr>
+                                <td>@transaction.ID</td>
+                                <td>@transaction.Date.ToShortDateString()</td>
+                                <td>@transaction.Amount</td>
+                                <td>@transaction.Tags</td>
+                                <td>@transaction.Notes</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">No inflows found.</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
-            <button class="add-button" @onclick="NavigateToAdd">Add</button>
         </div>
+
+        <!-- Button to Navigate to Add Inflow Page -->
+        <button id="add-inflow-button" class="add-button" @onclick="NavigateToAdd">Add Inflow</button>
     </div>
 </div>
 
 @code {
+    // List to store all transactions of type "Inflow"
+    private List<Transaction> AllTransactions { get; set; } = new List<Transaction>();
+
+    // List to store filtered transactions based on user input
+    private List<Transaction> FilteredTransactions { get; set; } = new List<Transaction>();
+
+    // Total amount of inflows
+    private decimal TotalInflows { get; set; }
+
+    // Variables for filtering by date
+    private DateTime? StartDate { get; set; }
+    private DateTime? EndDate { get; set; }
+
+    // Variable for filtering by selected tag
+    private string SelectedTag { get; set; } = string.Empty;
+
+    // Called when the component is initialized, loads all inflows
+    protected override async Task OnInitializedAsync()
+    {
+        // Load all transactions of type "Inflow"
+        AllTransactions = await TransactionService.GetTransactionsByTypeAsync("Inflow");
+
+        // Set the filtered transactions initially to all transactions
+        FilteredTransactions = new List<Transaction>(AllTransactions);
+
+        // Calculate total inflows
+        TotalInflows = AllTransactions.Sum(t => t.Amount);
+    }
+
+    // Triggered when a tag is selected for filtering
+    private void FilterByTag(ChangeEventArgs e)
+    {
+        // Set the selected tag value
+        SelectedTag = e.Value.ToString();
+        ApplyFilters();
+    }
+
+    // Applies filters based on date range and selected tag
+    private void ApplyFilters()
+    {
+        // Filter transactions based on date range and tag
+        FilteredTransactions = AllTransactions.Where(t =>
+            (!StartDate.HasValue || t.Date >= StartDate.Value) &&
+            (!EndDate.HasValue || t.Date <= EndDate.Value) &&
+            (string.IsNullOrEmpty(SelectedTag) || t.Tags.Contains(SelectedTag, StringComparison.OrdinalIgnoreCase))
+        ).ToList();
+    }
+
+    // Navigate to the Add Inflow page
     private void NavigateToAdd()
     {
         NavigationManager.NavigateTo("/inflowadd");

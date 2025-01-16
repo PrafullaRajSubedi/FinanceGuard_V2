@@ -1,0 +1,26 @@
+[
+  {
+    "ID": 0,
+    "Type": "Inflow",
+    "Amount": 10000,
+    "Date": "2025-01-17T01:29:35.2479443+05:45",
+    "Tags": "Salary, Jan",
+    "Notes": "Www"
+  },
+  {
+    "ID": 0,
+    "Type": "Inflow",
+    "Amount": 20000,
+    "Date": "2025-01-17T00:00:00",
+    "Tags": "Investment, NBB",
+    "Notes": "from investment in nbb"
+  },
+  {
+    "ID": 1,
+    "Type": "Inflow",
+    "Amount": 2000,
+    "Date": "2025-01-02T00:00:00",
+    "Tags": "Salary, ABC",
+    "Notes": "aaaassssssfffffffddd"
+  }
+]
