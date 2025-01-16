@@ -123,9 +123,12 @@
 
         <!-- Filter Section for Date and Tags -->
         <div class="filter-container" id="inflow-filters">
+            <!-- Start Date Input -->
             <input id="filter-start-date" type="date" @bind="StartDate" placeholder="Start Date" />
+            <!-- End Date Input -->
             <input id="filter-end-date" type="date" @bind="EndDate" placeholder="End Date" />
-            <select id="filter-tags" @onchange="FilterByTag">
+            <!-- Tag Filter Dropdown -->
+            <select id="filter-tags" @bind="SelectedTag">
                 <option value="">All Tags</option>
                 <option value="Salary">Salary</option>
                 <option value="Investment">Investment</option>
@@ -145,6 +148,8 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                 
                     @if (FilteredTransactions != null && FilteredTransactions.Any())
                     {
                         foreach (var transaction in FilteredTransactions)
@@ -174,47 +179,63 @@
 </div>
 
 @code {
+
+    // Date range for filtering
+    private DateTime? StartDate
+    {
+        get => _startDate;
+        set
+        {
+            _startDate = value;
+            ApplyFilters(); 
+        }
+    }
+
+    private DateTime? EndDate
+    {
+        get => _endDate;
+        set
+        {
+            _endDate = value;
+            ApplyFilters(); 
+        }
+    }
+
+    private DateTime? _startDate;
+    private DateTime? _endDate;
+
+    // Selected tag for filtering
+    private string SelectedTag
+    {
+        get => _selectedTag;
+        set
+        {
+            _selectedTag = value;
+            ApplyFilters(); // Trigger filtering on tag change
+        }
+    }
+
+    private string _selectedTag = string.Empty;
+
     // List to store all transactions of type "Inflow"
     private List<Transaction> AllTransactions { get; set; } = new List<Transaction>();
 
-    // List to store filtered transactions based on user input
+    // List to store filtered transactions
     private List<Transaction> FilteredTransactions { get; set; } = new List<Transaction>();
 
     // Total amount of inflows
-    private decimal TotalInflows { get; set; }
+    private decimal TotalInflows => FilteredTransactions.Sum(t => t.Amount);
 
-    // Variables for filtering by date
-    private DateTime? StartDate { get; set; }
-    private DateTime? EndDate { get; set; }
-
-    // Variable for filtering by selected tag
-    private string SelectedTag { get; set; } = string.Empty;
-
-    // Called when the component is initialized, loads all inflows
+    // Load all inflows when the component initializes
     protected override async Task OnInitializedAsync()
     {
-        // Load all transactions of type "Inflow"
         AllTransactions = await TransactionService.GetTransactionsByTypeAsync("Inflow");
-
-        // Set the filtered transactions initially to all transactions
-        FilteredTransactions = new List<Transaction>(AllTransactions);
-
-        // Calculate total inflows
-        TotalInflows = AllTransactions.Sum(t => t.Amount);
+        FilteredTransactions = new List<Transaction>(AllTransactions); // Set initial filtered list
     }
 
-    // Triggered when a tag is selected for filtering
-    private void FilterByTag(ChangeEventArgs e)
-    {
-        // Set the selected tag value
-        SelectedTag = e.Value.ToString();
-        ApplyFilters();
-    }
-
-    // Applies filters based on date range and selected tag
+    // Apply filters for date range and selected tag
     private void ApplyFilters()
     {
-        // Filter transactions based on date range and tag
         FilteredTransactions = AllTransactions.Where(t =>
             (!StartDate.HasValue || t.Date >= StartDate.Value) &&
             (!EndDate.HasValue || t.Date <= EndDate.Value) &&
