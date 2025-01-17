@@ -178,5 +178,14 @@
     "Tags": "Investment, Monthly ",
     "Notes": "Got it monthly",
     "Status": "Pending"
+  },
+  {
+    "ID": 20,
+    "Type": "Inflow",
+    "Amount": 200,
+    "Date": "2025-01-03T00:00:00",
+    "Tags": "Salary, New ",
+    "Notes": "new salary",
+    "Status": "Pending"
   }
 ]

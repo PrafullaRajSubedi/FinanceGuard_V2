@@ -96,6 +96,38 @@
             background-color: #d87c00;
         }
 
+    .filter-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+        .filter-container input, .filter-container select {
+            padding: 8px;
+            border: 1px solid #b4c7b4;
+            border-radius: 4px;
+        }
+
+    .tabs {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: 1px solid #b4c7b4;
+        background-color: #f39c12;
+        color: white;
+        margin-right: 5px;
+        border-radius: 4px;
+    }
+
+        .tab.active {
+            background-color: #d87c00;
+            font-weight: bold;
+        }
+
     .error-message {
         color: red;
         font-size: 0.9rem;
@@ -104,7 +136,6 @@
 </style>
 
 <div class="container">
-    <!-- Navigation Menu -->
     <div class="menu">
         <a href="/dashboard">Dashboard</a>
         <a href="/inflow">Cash Inflow</a>
@@ -116,6 +147,19 @@
         <div class="header">
             <h1>Debt Management</h1>
             <div>Total Debt: $@TotalDebt</div>
+        </div>
+
+        <div class="filter-container">
+            <div>
+                <input type="date" @bind="StartDate" @bind:event="oninput" placeholder="Start Date" />
+                <input type="date" @bind="EndDate" @bind:event="oninput" placeholder="End Date" />
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab @(SelectedTab == "All" ? "active" : "")" @onclick='@(() => ChangeTab("All"))'>All</div>
+            <div class="tab @(SelectedTab == "Pending" ? "active" : "")" @onclick='@(() => ChangeTab("Pending"))'>Pending</div>
+            <div class="tab @(SelectedTab == "Cleared" ? "active" : "")" @onclick='@(() => ChangeTab("Cleared"))'>Cleared</div>
         </div>
 
         @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -136,9 +180,9 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Debts != null && Debts.Any())
+                @if (FilteredDebts != null && FilteredDebts.Any())
                 {
-                    foreach (var debt in Debts)
+                    foreach (var debt in FilteredDebts)
                     {
                         <tr>
                             <td>@debt.ID</td>
@@ -175,36 +219,46 @@
 
 @code {
     private List<Transaction> Debts { get; set; } = new List<Transaction>();
+    private List<Transaction> FilteredDebts { get; set; } = new List<Transaction>();
     private decimal TotalDebt { get; set; }
-    private decimal TotalBalance { get; set; }
+    private DateTime? StartDate { get; set; }
+    private DateTime? EndDate { get; set; }
+    private string SelectedTab { get; set; } = "All";
     private string ErrorMessage { get; set; } = string.Empty;
 
-    // Load debts and calculate total balance and total debt
     protected override async Task OnInitializedAsync()
     {
         Debts = await TransactionService.GetTransactionsByTypeAsync("Debt");
-        TotalDebt = await TransactionService.CalculateTotalDebtAsync();
-        TotalBalance = await TransactionService.CalculateTotalBalanceAsync();
+        TotalDebt = Debts.Sum(d => d.Amount);
+        ApplyFilters();
     }
 
-    // Clear a debt if sufficient balance is available
+    private void ApplyFilters()
+    {
+        FilteredDebts = Debts.Where(d =>
+            (!StartDate.HasValue || d.Date >= StartDate) &&
+            (!EndDate.HasValue || d.Date <= EndDate) &&
+            (SelectedTab == "All" || d.Status == SelectedTab)
+        ).ToList();
+    }
+
+    private void ChangeTab(string tab)
+    {
+        SelectedTab = tab;
+        ApplyFilters();
+    }
+
     private async Task ClearDebt(int id, decimal amount)
     {
         ErrorMessage = string.Empty;
-
-        if (TotalBalance < amount)
-        {
-            ErrorMessage = "Insufficient balance to clear this debt.";
-            return;
-        }
 
         var success = await TransactionService.UpdateDebtStatusAsync(id, "Cleared");
 
         if (success)
         {
             Debts = await TransactionService.GetTransactionsByTypeAsync("Debt");
-            TotalDebt = await TransactionService.CalculateTotalDebtAsync();
-            TotalBalance = await TransactionService.CalculateTotalBalanceAsync();
+            TotalDebt = Debts.Sum(d => d.Amount);
+            ApplyFilters();
         }
         else
         {
@@ -212,7 +266,6 @@
         }
     }
 
-    // Navigate to Add Debt Page
     private void NavigateToAddDebt()
     {
         NavigationManager.NavigateTo("/debtadd");
